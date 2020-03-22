@@ -16,6 +16,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 图片处理的相关类
  */
 public class ImageUtils {
+    public static Integer height = 224;
+    public static Integer width = 224;
+    public static Integer channel = 3;
     /**
      * 将Base64转化成ImageInfo对象
      * @param s Base64码
@@ -52,8 +55,8 @@ public class ImageUtils {
         }
         try {
             BufferedImage biBefore = ImageIO.read(file);
-            BufferedImage bi = zoomImage(biBefore,224);
-            System.out.println("该图片是"+bi.getData().getNumBands()+"通道");
+            BufferedImage bi = zoomImage(biBefore,height,width);
+//            System.out.println("该图片是"+bi.getData().getNumBands()+"通道");
             //获取像素值
             int[] piexels = bi.getData().getPixels(0,0,bi.getHeight(),bi.getWidth(),new int[bi.getHeight()*bi.getWidth()*bi.getData().getNumBands()]);
             imageInfo = new ImageInfo(bi.getHeight(),bi.getWidth(),bi.getData().getNumBands(),piexels);
@@ -77,7 +80,7 @@ public class ImageUtils {
                 } else{
                     return true;
                 }}).toArray();
-            tfImageInfo = new ImageInfo(imageInfo.height,imageInfo.width,3,pixels);
+            tfImageInfo = new ImageInfo(imageInfo.height,imageInfo.width,channel,pixels);
             return tfImageInfo;
         }else {
             return imageInfo;
@@ -90,11 +93,11 @@ public class ImageUtils {
      * @return
      */
     public static int[][][][] mapTo4(int[] pixels){
-        int[][][][] martix = new int[1][224][224][3];
+        int[][][][] martix = new int[1][height][width][channel];
         int num = 0;
-        for (int i = 0; i < 224; i++) {
-            for (int j = 0;j < 224;j++){
-                for (int k = 0;k < 3;k++){
+        for (int i = 0; i < height; i++) {
+            for (int j = 0;j < width;j++){
+                for (int k = 0;k < channel;k++){
                     martix[0][i][j][k] = pixels[num];
                     num++;
                 }
@@ -106,12 +109,13 @@ public class ImageUtils {
     /**
      * 图片缩放的方法
      * @param bi 图片对象
-     * @param wh 缩放后的长宽值
+     * @param w 缩放后的长
+     * @param h 缩放后的宽
      * @return
      */
-    public static BufferedImage zoomImage(BufferedImage bi,int wh){
-        Image imageTemp = bi.getScaledInstance(wh,wh,BufferedImage.SCALE_DEFAULT);
-        BufferedImage newBufferImage = new BufferedImage(wh, wh, BufferedImage.TYPE_INT_RGB);
+    public static BufferedImage zoomImage(BufferedImage bi,int w,int h){
+        Image imageTemp = bi.getScaledInstance(w,h,BufferedImage.SCALE_DEFAULT);
+        BufferedImage newBufferImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics = newBufferImage.createGraphics();
         graphics.drawImage(imageTemp,0,0,null);
         graphics.dispose();

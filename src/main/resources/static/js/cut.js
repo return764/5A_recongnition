@@ -69,17 +69,64 @@ $(function () {
             url: "uploadImage",
             type: "POST",
             data: {
-                imgBase64 : data.toString()
+                imgBase64 : data.toString(),
+                url : $(".form-row input:eq(3)")[0].value
             },
             timeout : 10000, //超时时间设置，单位毫秒
             async: true,
             success: function (result) {
-                console.log(result);
-                $("#result").html(result);
+                console.log(result.data);
+                if (result.data != null) {
+                    $("#result").html(result.data);
+                }else {
+                    $("#result").html(result.msg);
+                }
             },
             error: function (result) {
 
             }
         });
     });
+    function upInfo() {
+        var height = $(".form-row input:eq(0)")[0].value;
+        var width = $(".form-row input:eq(1)")[0].value;
+        var channel = $(".form-row input:eq(2)")[0].value;
+        var url = $(".form-row input:eq(3)")[0].value;
+        $.ajax({
+            url:"uploadInfo",
+            type: "POST",
+            data: {
+                height : height,
+                width : width,
+                channel : channel,
+                url:url
+            },
+            timeout : 10000, //超时时间设置，单位毫秒
+            async: true,
+            success:function (result) {
+                console.log(result.msg);
+                showMsg($("#stateInfo p"),result.msg,result.code,result.data);
+            },
+            error:function (result) {
+
+            }
+        });
+    }
+    $("#upInfo_btn").on("click",upInfo);
+
+    function showMsg(target,msg,code,data) {
+        if (code != 10001){
+            target.removeClass("text-success");
+            target.addClass("text-danger");
+            target.html(msg);
+            setTimeout(function () {
+                target.html("模型连接失败");
+            },2000)
+        }else {
+            target.removeClass("text-danger");
+            target.addClass("text-success");
+            target.html(msg+":"+data);
+        }
+    }
+    upInfo();
 });

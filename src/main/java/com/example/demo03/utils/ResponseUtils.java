@@ -27,6 +27,18 @@ public class ResponseUtils {
     }
 
     /**
+     * 自定义成功
+     * @return
+     */
+    public static ResponseMessage success(ResponseEnum responseEnum,Object data){
+        ResponseMessage response = new ResponseMessage();
+        response.setCode(responseEnum.getCode());
+        response.setMsg(responseEnum.getMsg());
+        response.setData(data);
+        return response;
+    }
+
+    /**
      * 自定义错误的返回
      * @param code
      * @param msg
