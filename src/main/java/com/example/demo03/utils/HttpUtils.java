@@ -1,6 +1,6 @@
 package com.example.demo03.utils;
 
-import org.springframework.boot.configurationprocessor.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -19,11 +19,11 @@ public class HttpUtils {
      * @param json 携带的json数据
      * @return 返回结果
      */
-    public static String doPost(String url,JSONObject json)throws Exception {
+    public static String doPost(String url, JSONObject json)throws Exception {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> requestEntity = new HttpEntity<String>(json.toString(), headers);
+        HttpEntity<String> requestEntity = new HttpEntity<String>(json.toJSONString(), headers);
         //  执行HTTP请求
         ResponseEntity<String> response = restTemplate.postForEntity(url, requestEntity, String.class);
         return response.getBody();

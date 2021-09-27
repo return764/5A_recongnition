@@ -1,18 +1,22 @@
 package com.example.demo03.utils;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 public class NumUtils {
     /**
      * 返回数组的最大值的下标
      * @param nums
      * @return
      */
-    public static int max(Object[] nums){
+    public static int max(List<BigDecimal> nums){
         int max = 0;
-        double maxNum = (double) nums[0];
-        for (int i = 0; i < nums.length; i++) {
-            double thisNum = (double) nums[i];
-            if(maxNum < thisNum){
-                maxNum = (double) nums[i];
+
+        BigDecimal maxNum = nums.get(0);
+        for (int i = 0; i < nums.size(); i++) {
+            BigDecimal thisNum = nums.get(i);
+            if(maxNum.compareTo(thisNum) < 0){
+                maxNum = nums.get(i);
                 max = i;
             }
         }
